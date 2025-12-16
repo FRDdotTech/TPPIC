@@ -1,0 +1,18 @@
+Warning[205] \\VFILER-AD-ETU.AD.UNISTRA.FR\AFRAYARD\BUREAU\TUTO_PIC2022.ASM 6 : Found directive in column 1. (include)
+Warning[207] \\VFILER-AD-ETU.AD.UNISTRA.FR\AFRAYARD\BUREAU\TUTO_PIC2022.ASM 12 : Found label after column 1. (BCD1)
+Warning[207] \\VFILER-AD-ETU.AD.UNISTRA.FR\AFRAYARD\BUREAU\TUTO_PIC2022.ASM 13 : Found label after column 1. (BCD01)
+Warning[207] \\VFILER-AD-ETU.AD.UNISTRA.FR\AFRAYARD\BUREAU\TUTO_PIC2022.ASM 14 : Found label after column 1. (BCD_TEMP)
+Warning[207] \\VFILER-AD-ETU.AD.UNISTRA.FR\AFRAYARD\BUREAU\TUTO_PIC2022.ASM 16 : Found label after column 1. (ADC_CON)
+Warning[207] \\VFILER-AD-ETU.AD.UNISTRA.FR\AFRAYARD\BUREAU\TUTO_PIC2022.ASM 17 : Found label after column 1. (ADC_TEMP)
+Message[302] \\VFILER-AD-ETU.AD.UNISTRA.FR\AFRAYARD\BUREAU\TUTO_PIC2022.ASM 25 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] \\VFILER-AD-ETU.AD.UNISTRA.FR\AFRAYARD\BUREAU\TUTO_PIC2022.ASM 30 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] \\VFILER-AD-ETU.AD.UNISTRA.FR\AFRAYARD\BUREAU\TUTO_PIC2022.ASM 38 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] \\VFILER-AD-ETU.AD.UNISTRA.FR\AFRAYARD\BUREAU\TUTO_PIC2022.ASM 58 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] \\VFILER-AD-ETU.AD.UNISTRA.FR\AFRAYARD\BUREAU\TUTO_PIC2022.ASM 77 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[305] \\VFILER-AD-ETU.AD.UNISTRA.FR\AFRAYARD\BUREAU\TUTO_PIC2022.ASM 126 : Using default destination of 1 (file).
+Message[305] \\VFILER-AD-ETU.AD.UNISTRA.FR\AFRAYARD\BUREAU\TUTO_PIC2022.ASM 129 : Using default destination of 1 (file).
+Message[305] \\VFILER-AD-ETU.AD.UNISTRA.FR\AFRAYARD\BUREAU\TUTO_PIC2022.ASM 149 : Using default destination of 1 (file).
+Message[305] \\VFILER-AD-ETU.AD.UNISTRA.FR\AFRAYARD\BUREAU\TUTO_PIC2022.ASM 162 : Using default destination of 1 (file).
+Message[305] \\VFILER-AD-ETU.AD.UNISTRA.FR\AFRAYARD\BUREAU\TUTO_PIC2022.ASM 167 : Using default destination of 1 (file).
+Message[305] \\VFILER-AD-ETU.AD.UNISTRA.FR\AFRAYARD\BUREAU\TUTO_PIC2022.ASM 171 : Using default destination of 1 (file).
+Warning[205] \\VFILER-AD-ETU.AD.UNISTRA.FR\AFRAYARD\BUREAU\TUTO_PIC2022.ASM 177 : Found directive in column 1. (end)
