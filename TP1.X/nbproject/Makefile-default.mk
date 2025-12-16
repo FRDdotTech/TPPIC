@@ -57,17 +57,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=//vfiler-ad-etu.ad.unistra.fr/afrayard/Bureau/tuto_pic2022.asm
+SOURCEFILES_QUOTED_IF_SPACED=ADC_UART.asm
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/_ext/2101421332/tuto_pic2022.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/_ext/2101421332/tuto_pic2022.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/ADC_UART.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/ADC_UART.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/_ext/2101421332/tuto_pic2022.o
+OBJECTFILES=${OBJECTDIR}/ADC_UART.o
 
 # Source Files
-SOURCEFILES=//vfiler-ad-etu.ad.unistra.fr/afrayard/Bureau/tuto_pic2022.asm
+SOURCEFILES=ADC_UART.asm
 
 
 
@@ -95,22 +95,22 @@ MP_LINKER_DEBUG_OPTION=-r=ROM@0x1F00:0x1FFF -r=RAM@SHARE:0x70:0x70 -r=RAM@SHARE:
 # ------------------------------------------------------------------------------------
 # Rules for buildStep: assemble
 ifeq ($(TYPE_IMAGE), DEBUG_RUN)
-${OBJECTDIR}/_ext/2101421332/tuto_pic2022.o: //vfiler-ad-etu.ad.unistra.fr/afrayard/Bureau/tuto_pic2022.asm  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}/_ext/2101421332" 
-	@${RM} ${OBJECTDIR}/_ext/2101421332/tuto_pic2022.o.d 
-	@${RM} ${OBJECTDIR}/_ext/2101421332/tuto_pic2022.o 
-	@${FIXDEPS} dummy.d -e "${OBJECTDIR}/_ext/2101421332/tuto_pic2022.err" $(SILENT) -c ${MP_AS} $(MP_EXTRA_AS_PRE) -d__DEBUG -d__MPLAB_DEBUGGER_ICD3=1 -q -p$(MP_PROCESSOR_OPTION)  -l\"${OBJECTDIR}/_ext/2101421332/tuto_pic2022.lst\" -e\"${OBJECTDIR}/_ext/2101421332/tuto_pic2022.err\" $(ASM_OPTIONS)    -o\"${OBJECTDIR}/_ext/2101421332/tuto_pic2022.o\" \"//vfiler-ad-etu.ad.unistra.fr/afrayard/Bureau/tuto_pic2022.asm\" 
-	@${DEP_GEN} -d "${OBJECTDIR}/_ext/2101421332/tuto_pic2022.o"
-	@${FIXDEPS} "${OBJECTDIR}/_ext/2101421332/tuto_pic2022.o.d" $(SILENT) -rsi ${MP_AS_DIR} -c18 
+${OBJECTDIR}/ADC_UART.o: ADC_UART.asm  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/ADC_UART.o.d 
+	@${RM} ${OBJECTDIR}/ADC_UART.o 
+	@${FIXDEPS} dummy.d -e "${OBJECTDIR}/ADC_UART.err" $(SILENT) -c ${MP_AS} $(MP_EXTRA_AS_PRE) -d__DEBUG -d__MPLAB_DEBUGGER_ICD3=1 -q -p$(MP_PROCESSOR_OPTION)  -l\"${OBJECTDIR}/ADC_UART.lst\" -e\"${OBJECTDIR}/ADC_UART.err\" $(ASM_OPTIONS)    -o\"${OBJECTDIR}/ADC_UART.o\" \"ADC_UART.asm\" 
+	@${DEP_GEN} -d "${OBJECTDIR}/ADC_UART.o"
+	@${FIXDEPS} "${OBJECTDIR}/ADC_UART.o.d" $(SILENT) -rsi ${MP_AS_DIR} -c18 
 	
 else
-${OBJECTDIR}/_ext/2101421332/tuto_pic2022.o: //vfiler-ad-etu.ad.unistra.fr/afrayard/Bureau/tuto_pic2022.asm  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}/_ext/2101421332" 
-	@${RM} ${OBJECTDIR}/_ext/2101421332/tuto_pic2022.o.d 
-	@${RM} ${OBJECTDIR}/_ext/2101421332/tuto_pic2022.o 
-	@${FIXDEPS} dummy.d -e "${OBJECTDIR}/_ext/2101421332/tuto_pic2022.err" $(SILENT) -c ${MP_AS} $(MP_EXTRA_AS_PRE) -q -p$(MP_PROCESSOR_OPTION)  -l\"${OBJECTDIR}/_ext/2101421332/tuto_pic2022.lst\" -e\"${OBJECTDIR}/_ext/2101421332/tuto_pic2022.err\" $(ASM_OPTIONS)    -o\"${OBJECTDIR}/_ext/2101421332/tuto_pic2022.o\" \"//vfiler-ad-etu.ad.unistra.fr/afrayard/Bureau/tuto_pic2022.asm\" 
-	@${DEP_GEN} -d "${OBJECTDIR}/_ext/2101421332/tuto_pic2022.o"
-	@${FIXDEPS} "${OBJECTDIR}/_ext/2101421332/tuto_pic2022.o.d" $(SILENT) -rsi ${MP_AS_DIR} -c18 
+${OBJECTDIR}/ADC_UART.o: ADC_UART.asm  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/ADC_UART.o.d 
+	@${RM} ${OBJECTDIR}/ADC_UART.o 
+	@${FIXDEPS} dummy.d -e "${OBJECTDIR}/ADC_UART.err" $(SILENT) -c ${MP_AS} $(MP_EXTRA_AS_PRE) -q -p$(MP_PROCESSOR_OPTION)  -l\"${OBJECTDIR}/ADC_UART.lst\" -e\"${OBJECTDIR}/ADC_UART.err\" $(ASM_OPTIONS)    -o\"${OBJECTDIR}/ADC_UART.o\" \"ADC_UART.asm\" 
+	@${DEP_GEN} -d "${OBJECTDIR}/ADC_UART.o"
+	@${FIXDEPS} "${OBJECTDIR}/ADC_UART.o.d" $(SILENT) -rsi ${MP_AS_DIR} -c18 
 	
 endif
 

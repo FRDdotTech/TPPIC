@@ -1,0 +1,18 @@
+Warning[205] U:\TPPIC\TP1.X\ADC_UART.ASM 6 : Found directive in column 1. (include)
+Warning[207] U:\TPPIC\TP1.X\ADC_UART.ASM 12 : Found label after column 1. (BCD1)
+Warning[207] U:\TPPIC\TP1.X\ADC_UART.ASM 13 : Found label after column 1. (BCD01)
+Warning[207] U:\TPPIC\TP1.X\ADC_UART.ASM 14 : Found label after column 1. (BCD_TEMP)
+Warning[207] U:\TPPIC\TP1.X\ADC_UART.ASM 16 : Found label after column 1. (ADC_CON)
+Warning[207] U:\TPPIC\TP1.X\ADC_UART.ASM 17 : Found label after column 1. (ADC_TEMP)
+Message[302] U:\TPPIC\TP1.X\ADC_UART.ASM 25 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] U:\TPPIC\TP1.X\ADC_UART.ASM 30 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] U:\TPPIC\TP1.X\ADC_UART.ASM 38 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] U:\TPPIC\TP1.X\ADC_UART.ASM 58 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] U:\TPPIC\TP1.X\ADC_UART.ASM 77 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[305] U:\TPPIC\TP1.X\ADC_UART.ASM 126 : Using default destination of 1 (file).
+Message[305] U:\TPPIC\TP1.X\ADC_UART.ASM 129 : Using default destination of 1 (file).
+Message[305] U:\TPPIC\TP1.X\ADC_UART.ASM 149 : Using default destination of 1 (file).
+Message[305] U:\TPPIC\TP1.X\ADC_UART.ASM 162 : Using default destination of 1 (file).
+Message[305] U:\TPPIC\TP1.X\ADC_UART.ASM 167 : Using default destination of 1 (file).
+Message[305] U:\TPPIC\TP1.X\ADC_UART.ASM 171 : Using default destination of 1 (file).
+Warning[205] U:\TPPIC\TP1.X\ADC_UART.ASM 177 : Found directive in column 1. (end)

@@ -13,6 +13,7 @@
                    displayName="Source Files"
                    projectFiles="true">
       <itemPath>//vfiler-ad-etu.ad.unistra.fr/afrayard/Bureau/tuto_pic2022.asm</itemPath>
+      <itemPath>ADC_UART.asm</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -63,6 +64,10 @@
         <makeCustomizationEnableLongLines>false</makeCustomizationEnableLongLines>
         <makeCustomizationNormalizeHexFile>false</makeCustomizationNormalizeHexFile>
       </makeCustomizationType>
+      <item path="//vfiler-ad-etu.ad.unistra.fr/afrayard/Bureau/tuto_pic2022.asm"
+            ex="true"
+            overriding="false">
+      </item>
       <ICD3PlatformTool>
         <property key="AutoSelectMemRanges" value="auto"/>
         <property key="Freeze Peripherals" value="true"/>
