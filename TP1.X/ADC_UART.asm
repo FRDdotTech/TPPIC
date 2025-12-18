@@ -33,7 +33,9 @@ t1_it
 	goto leave
 	
 rx_if	
-	BCF	PIR1, RCIF
+	movfw	RCREG
+	movwf	UART_RX_BUF
+	BSF	UART_RX_EN, 0
 	goto leave
 	
 	
@@ -55,6 +57,8 @@ jump_start
 	ADC_TEMP	equ 0x76
     
 	UART_TX_EN	equ 0x78
+	UART_RX_EN	equ 0x79
+	UART_RX_BUF	equ 0x80
     
 	ctx_w		equ 0x20
 	ctx_status	equ 0x21
@@ -101,13 +105,13 @@ jump_start
 	;7- SPEN	1
 	;6- RX9		0
 	;5- SREN	0
-	;4- CREN	0
+	;4- CREN	1
 	;3- ADDEN	0
 	;2- FERR	0
 	;1- OERR	0
 	;1- RX9D	0
 	banksel RCSTA
-	MOVLW	B'10000000' ;ENABLE SERIAL PORT
+	MOVLW	B'10010000' ;ENABLE SERIAL PORT
 	MOVWF	RCSTA ;RECEIVE STATUS REG
 	
 	;---CONFIGURE SPBRG FOR DESIRED BAUD RATE
@@ -126,7 +130,7 @@ jump_start
 	MOVWF	INTCON
 	
 	banksel PIE1
-	MOVLW	B'00000001'
+	MOVLW	B'00100001'
 	MOVWF	PIE1
 	
 	
@@ -134,6 +138,7 @@ jump_start
 	; ---main()
 loop	call	ADC
 	call	BCD
+	call	ACK_RX
 	call	UART_TX_IT
 	goto	loop
 	
@@ -168,12 +173,22 @@ D0	DECFSZ	TMR0
 	goto	D1	
 	
 	return
-	
+
+ACK_RX:
+	btfss	UART_RX_EN, 0
+	return
+	movfw	UART_RX_BUF
+	call	UART_TX
+	movlw	d'10'
+	call	UART_TX
+	bcf	UART_RX_EN, 0
+	return
 	
 UART_TX_IT:
 	BTFSS	UART_TX_EN, 0
 	return
 	BCF	UART_TX_EN, 0
+	
 	banksel TXREG
 	movfw	BCD1
 	call	UART_TX
