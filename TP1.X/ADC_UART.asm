@@ -9,16 +9,43 @@ include "p16f877.inc"
 ; __config 0xFF39
  __CONFIG _FOSC_HS & _WDTE_OFF & _PWRTE_OFF & _CP_OFF & _BOREN_OFF & _LVP_OFF & _CPD_OFF & _WRT_ON
 
-	BCD1	    equ	0x71
-	BCD01	    equ	0x72
-	BCD_TEMP    equ	0x74
+ 
+ 
+    org 0x0 ; reset addr
+	goto jump_start
 	
-	ADC_CON	    equ	0x75
-	ADC_TEMP    equ 0x76
+irq org	0x004
+    ; context save
+	banksel STATUS
+	MOVWF   ctx_w
+	MOVFW   STATUS
+	MOVWF   ctx_status
+	; set uart_tx flag
+	btfss	PIR1, TMR1IF
+	BCF	UART_TX_EN, 0
+false	BSF	UART_TX_EN, 0
+	; restore context
+	MOVFW   ctx_status
+	MOVWF   STATUS
+	MOVFW   ctx_w
+	BCF	PIR1, TMR1IF
+	RETFIE
+    
+    
+	org	0x100
 	
-	org	0x00
-
+jump_start	
+	BCD1		equ 0x71
+	BCD01		equ 0x72
+	BCD_TEMP	equ 0x74
 	
+	ADC_CON		equ 0x75
+	ADC_TEMP	equ 0x76
+    
+	UART_TX_EN	equ 0x78
+    
+	ctx_w		equ 0x20
+	ctx_status	equ 0x21
 		; configuration du port B&D en sortie (8LED)
 
 	banksel TRISB		; port B en sortie
@@ -76,27 +103,26 @@ include "p16f877.inc"
 	MOVLW	D'50' ;WE WILL USE 9600bps 
 	MOVWF	SPBRG ;BAUD AT 8MHZ
 	
+	; TIMER1 SETUP
+	banksel T1CON
+	MOVLW	B'00111101'
+	MOVWF	T1CON
 	
+	;TIMER1 IT SETUP
+	banksel INTCON
+	MOVLW	B'11000000'
+	MOVWF	INTCON
 	
+	banksel PIE1
+	MOVLW	B'00000001'
+	MOVWF	PIE1
 	
 	
 	
 	; ---main()
 loop	call	ADC
 	call	BCD
-	banksel TXREG
-	movfw	BCD1
-	call	UART_TX
-	movlw	d'44'
-	call	UART_TX
-	movfw	BCD01
-	call	UART_TX
-	movlw	d'86'
-	call	UART_TX
-	movlw	d'10'
-	call	UART_TX
-	;movlw	d'13'
-	;call	UART_TX
+	call	UART_TX_IT
 	goto	loop
 	
 ADC:	    ; wait unitil ADC convertion is done 
@@ -131,6 +157,23 @@ D0	DECFSZ	TMR0
 	
 	return
 	
+	
+UART_TX_IT:
+	BTFSS	UART_TX_EN, 0
+	return
+	BCF	UART_TX_EN, 0
+	banksel TXREG
+	movfw	BCD1
+	call	UART_TX
+	movlw	d'44'
+	call	UART_TX
+	movfw	BCD01
+	call	UART_TX
+	movlw	d'86'
+	call	UART_TX
+	movlw	d'10'
+	call	UART_TX
+	return
 	
 UART_TX:	; wait for transmit standby
 wait	nop
