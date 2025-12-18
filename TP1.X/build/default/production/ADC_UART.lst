@@ -1,4 +1,4 @@
-MPASM 5.86                      ADC_UART.ASM   12-18-2025  11:34:35         PAGE  1
+MPASM 5.86                      ADC_UART.ASM   12-18-2025  11:43:21         PAGE  1
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -57,7 +57,7 @@ Warning[205]: Found directive in column 1. (include)
 0015   2???           00040         goto leave
                       00041         
                       00042         
-MPASM 5.86                      ADC_UART.ASM   12-18-2025  11:34:35         PAGE  2
+MPASM 5.86                      ADC_UART.ASM   12-18-2025  11:43:21         PAGE  2
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -116,7 +116,7 @@ Message[302]: Register in operand not in bank 0.  Ensure that bank bits are corr
                       00079         
                       00080         ; configuration de l'ADC
                       00081         
-MPASM 5.86                      ADC_UART.ASM   12-18-2025  11:34:35         PAGE  3
+MPASM 5.86                      ADC_UART.ASM   12-18-2025  11:43:21         PAGE  3
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -175,7 +175,7 @@ Message[302]: Register in operand not in bank 0.  Ensure that bank bits are corr
                       00129         
                       00130         ;TIMER1 IT SETUP
 0124   1283 1303      00131         banksel INTCON
-MPASM 5.86                      ADC_UART.ASM   12-18-2025  11:34:35         PAGE  4
+MPASM 5.86                      ADC_UART.ASM   12-18-2025  11:43:21         PAGE  4
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -234,7 +234,7 @@ Message[305]: Using default destination of 1 (file).
 0149   2???           00179         goto    D1      
                       00180         
 014A   0008           00181         return
-MPASM 5.86                      ADC_UART.ASM   12-18-2025  11:34:35         PAGE  5
+MPASM 5.86                      ADC_UART.ASM   12-18-2025  11:43:21         PAGE  5
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -252,101 +252,119 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 0152   1079           00191         bcf     UART_RX_EN, 0
 0153   2???           00192         call    T_AUTO
 0154   2???           00193         call    T_PULL
-0155   0008           00194         return
-                      00195         
-0156                  00196 T_AUTO:
-0156   3030           00197         movlw   d'48'
+0155   2???           00194         call    T_REQ
+0156   0008           00195         return
+                      00196         
+0157                  00197 T_AUTO:
+0157   3041           00198         movlw   d'65'
 Message[305]: Using default destination of 1 (file).
-0157   02FB           00198         subwf   UART_RX_TMP
-0158   1D03           00199         btfss   STATUS, Z
-0159   0008           00200         return
-015A   107A           00201         BCF     UART_MODE, 0
-                      00202 
-                      00203         
-015B                  00204 T_PULL:
-015B   0873           00205         movfw   UART_RX_BUF
-015C   00FB           00206         movwf   UART_RX_TMP
-015D   3031           00207         movlw   d'49'
+0158   02FB           00199         subwf   UART_RX_TMP
+0159   1D03           00200         btfss   STATUS, Z
+015A   0008           00201         return
+015B   107A           00202         BCF     UART_MODE, 0
+                      00203 
+                      00204         
+015C                  00205 T_PULL:
+015C   0873           00206         movfw   UART_RX_BUF
+015D   00FB           00207         movwf   UART_RX_TMP
+015E   3052           00208         movlw   d'82'
 Message[305]: Using default destination of 1 (file).
-015E   02FB           00208         subwf   UART_RX_TMP
-015F   1D03           00209         btfss   STATUS, Z
-0160   0008           00210         return
-0161   147A           00211         BSF     UART_MODE, 0
-0162   1478           00212         BSF     UART_TX_EN, 0
-                      00213 
-0163                  00214 UART_TX_IT:
-0163   1C78           00215         BTFSS   UART_TX_EN, 0
-0164   0008           00216         return
-0165   1078           00217         BCF     UART_TX_EN, 0
-                      00218         
-0166   1283 1303      00219         banksel TXREG
-0168   0871           00220         movfw   BCD1
-0169   2???           00221         call    UART_TX
-016A   302C           00222         movlw   d'44'
-016B   2???           00223         call    UART_TX
-016C   0872           00224         movfw   BCD01
-016D   2???           00225         call    UART_TX
-016E   3056           00226         movlw   d'86'
-016F   2???           00227         call    UART_TX
-0170   300A           00228         movlw   d'10'
-0171   2???           00229         call    UART_TX
-0172   0008           00230         return
-                      00231         
-0173                  00232 UART_TX:        ; wait for transmit standby
-MPASM 5.86                      ADC_UART.ASM   12-18-2025  11:34:35         PAGE  6
+015F   02FB           00209         subwf   UART_RX_TMP
+0160   1D03           00210         btfss   STATUS, Z
+0161   0008           00211         return
+0162   147A           00212         BSF     UART_MODE, 0
+0163   1478           00213         BSF     UART_TX_EN, 0
+                      00214 
+0164                  00215 T_REQ:
+0164   1C7A           00216         btfss   UART_MODE,0
+0165   0008           00217             return
+0166   0873           00218         movfw   UART_RX_BUF
+0167   00FB           00219         movwf   UART_RX_TMP
+0168   3064           00220         movlw   d'100'
+Message[305]: Using default destination of 1 (file).
+0169   02FB           00221         subwf   UART_RX_TMP
+016A   1D03           00222         btfss   STATUS, Z
+016B   0008           00223         return
+016C   1478           00224         BSF     UART_TX_EN, 0
+016D                  00225 UART_TX_IT:
+016D   1C78           00226         BTFSS   UART_TX_EN, 0
+016E   0008           00227         return
+016F   1078           00228         BCF     UART_TX_EN, 0
+                      00229         
+0170   1283 1303      00230         banksel TXREG
+0172   0871           00231         movfw   BCD1
+MPASM 5.86                      ADC_UART.ASM   12-18-2025  11:43:21         PAGE  6
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-0173   0000           00233 wait    nop
-0174   1283 1303      00234         banksel PIR1
-0176   1E0C           00235         BTFSS   PIR1, TXIF
-0177   2???           00236         goto wait
-0178   0099           00237         MOVWF   TXREG
-                      00238         ;call   DELAY
-0179   0008           00239         return
-                      00240         
-017A   0000           00241 BCD:nop ;unité BCD
-017B   0875           00242         MOVFW   ADC_CON
-017C   00F6           00243         MOVWF   ADC_TEMP
-017D                  00244 ret
-017D   3005           00245         movlw   d'5'
+0173   2???           00232         call    UART_TX
+0174   302C           00233         movlw   d'44'
+0175   2???           00234         call    UART_TX
+0176   0872           00235         movfw   BCD01
+0177   2???           00236         call    UART_TX
+0178   3056           00237         movlw   d'86'
+0179   2???           00238         call    UART_TX
+017A   300A           00239         movlw   d'10'
+017B   2???           00240         call    UART_TX
+017C   0008           00241         return
+                      00242         
+017D                  00243 UART_TX:        ; wait for transmit standby
+017D   0000           00244 wait    nop
+017E   1283 1303      00245         banksel PIR1
+0180   1E0C           00246         BTFSS   PIR1, TXIF
+0181   2???           00247         goto wait
+0182   0099           00248         MOVWF   TXREG
+                      00249         ;call   DELAY
+0183   0008           00250         return
+                      00251         
+0184   0000           00252 BCD:nop ;unité BCD
+0185   0875           00253         MOVFW   ADC_CON
+0186   00F6           00254         MOVWF   ADC_TEMP
+0187                  00255 ret
+0187   3005           00256         movlw   d'5'
 Message[305]: Using default destination of 1 (file).
-017E   02F6           00246         subwf   ADC_TEMP
-017F   1803           00247         btfsc   STATUS, C
-0180   2???           00248         goto    dec_pp
-0181   0871           00249         movfw   BCD1
-0182   3E30           00250         addlw   d'48'
-0183   00F1           00251         movwf   BCD1
-                      00252         
-0184   0872           00253         movfw   BCD01
-0185   3E30           00254         addlw   d'48'
-0186   00F2           00255         movwf   BCD01
-0187   0008           00256         return
-                      00257         
-                      00258 
+0188   02F6           00257         subwf   ADC_TEMP
+0189   1803           00258         btfsc   STATUS, C
+018A   2???           00259         goto    dec_pp
+018B   0871           00260         movfw   BCD1
+018C   3E30           00261         addlw   d'48'
+018D   00F1           00262         movwf   BCD1
+                      00263         
+018E   0872           00264         movfw   BCD01
+018F   3E30           00265         addlw   d'48'
+0190   00F2           00266         movwf   BCD01
+0191   0008           00267         return
+                      00268         
+                      00269 
 Message[305]: Using default destination of 1 (file).
-0188   0AF1           00259 unit_pp incf    BCD1
-0189   01F2           00260         clrf    BCD01
-                      00261         
-                      00262     
-                      00263 
-Message[305]: Using default destination of 1 (file).
-018A   0AF2           00264 dec_pp  incf    BCD01
-018B   0872           00265         movfw   BCD01
-018C   00F4           00266         movwf   BCD_TEMP
-018D   300A           00267         movlw   D'10'
-Message[305]: Using default destination of 1 (file).
-018E   02F4           00268         subwf   BCD_TEMP
-018F   1903           00269         btfsc   STATUS, Z
-0190   2???           00270         goto    unit_pp
-0191   2???           00271         goto    ret
+0192   0AF1           00270 unit_pp incf    BCD1
+0193   01F2           00271         clrf    BCD01
                       00272         
-                      00273 
+                      00273     
+                      00274 
+Message[305]: Using default destination of 1 (file).
+0194   0AF2           00275 dec_pp  incf    BCD01
+0195   0872           00276         movfw   BCD01
+0196   00F4           00277         movwf   BCD_TEMP
+0197   300A           00278         movlw   D'10'
+Message[305]: Using default destination of 1 (file).
+0198   02F4           00279         subwf   BCD_TEMP
+0199   1903           00280         btfsc   STATUS, Z
+MPASM 5.86                      ADC_UART.ASM   12-18-2025  11:43:21         PAGE  7
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+019A   2???           00281         goto    unit_pp
+019B   2???           00282         goto    ret
+                      00283         
+                      00284 
 Warning[205]: Found directive in column 1. (end)
-3F3A                  00274 end
-MPASM 5.86                      ADC_UART.ASM   12-18-2025  11:34:35         PAGE  7
+3F3A                  00285 end
+MPASM 5.86                      ADC_UART.ASM   12-18-2025  11:43:21         PAGE  8
 
 
 SYMBOL TABLE
@@ -370,7 +388,7 @@ ADIF                              00000006
 ADON                              00000000
 ADRESH                            0000001E
 ADRESL                            0000009E
-BCD                               0000017A
+BCD                               00000184
 BCD01                             00000072
 BCD1                              00000071
 BCD_TEMP                          00000074
@@ -405,7 +423,7 @@ CCPR2H                            0000001C
 CCPR2L                            0000001B
 CHS0                              00000003
 CHS1                              00000004
-MPASM 5.86                      ADC_UART.ASM   12-18-2025  11:34:35         PAGE  8
+MPASM 5.86                      ADC_UART.ASM   12-18-2025  11:43:21         PAGE  9
 
 
 SYMBOL TABLE
@@ -464,7 +482,7 @@ NOT_RBPU                          00000007
 NOT_RC8                           00000006
 NOT_T1SYNC                        00000002
 NOT_TO                            00000004
-MPASM 5.86                      ADC_UART.ASM   12-18-2025  11:34:35         PAGE  9
+MPASM 5.86                      ADC_UART.ASM   12-18-2025  11:43:21         PAGE 10
 
 
 SYMBOL TABLE
@@ -523,7 +541,7 @@ RBIF                              00000000
 RC0                               00000000
 RC1                               00000001
 RC2                               00000002
-MPASM 5.86                      ADC_UART.ASM   12-18-2025  11:34:35         PAGE 10
+MPASM 5.86                      ADC_UART.ASM   12-18-2025  11:43:21         PAGE 11
 
 
 SYMBOL TABLE
@@ -582,7 +600,7 @@ SSPM3                             00000003
 SSPOV                             00000006
 SSPSTAT                           00000094
 STATUS                            00000003
-MPASM 5.86                      ADC_UART.ASM   12-18-2025  11:34:35         PAGE 11
+MPASM 5.86                      ADC_UART.ASM   12-18-2025  11:43:21         PAGE 12
 
 
 SYMBOL TABLE
@@ -641,7 +659,7 @@ TRISC0                            00000000
 TRISC1                            00000001
 TRISC2                            00000002
 TRISC3                            00000003
-MPASM 5.86                      ADC_UART.ASM   12-18-2025  11:34:35         PAGE 12
+MPASM 5.86                      ADC_UART.ASM   12-18-2025  11:43:21         PAGE 13
 
 
 SYMBOL TABLE
@@ -674,16 +692,17 @@ TXIE                              00000004
 TXIF                              00000004
 TXREG                             00000019
 TXSTA                             00000098
-T_AUTO                            00000156
-T_PULL                            0000015B
+T_AUTO                            00000157
+T_PULL                            0000015C
+T_REQ                             00000164
 UA                                00000001
 UART_MODE                         0000007A
 UART_RX_BUF                       00000073
 UART_RX_EN                        00000079
 UART_RX_TMP                       0000007B
-UART_TX                           00000173
+UART_TX                           0000017D
 UART_TX_EN                        00000078
-UART_TX_IT                        00000163
+UART_TX_IT                        0000016D
 W                                 00000000
 WCOL                              00000007
 WR                                00000001
@@ -699,13 +718,13 @@ _CPD_OFF                          00003FFF
 _CPD_ON                           00003EFF
 _CP_ALL                           00000FCF
 _CP_HALF                          00001FDF
-_CP_OFF                           00003FFF
-MPASM 5.86                      ADC_UART.ASM   12-18-2025  11:34:35         PAGE 13
+MPASM 5.86                      ADC_UART.ASM   12-18-2025  11:43:21         PAGE 14
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+_CP_OFF                           00003FFF
 _CP_UPPER_256                     00002FEF
 _DEBUG_OFF                        00003FFF
 _DEBUG_ON                         000037FF
@@ -737,22 +756,22 @@ _XT_OSC                           00003FFD
 __16F877                          00000001
 ctx_status                        00000021
 ctx_w                             00000020
-dec_pp                            0000018A
+dec_pp                            00000194
 irq                               00000004
 jump_start                        00000100
 leave                             00000016
 loop                              0000012E
 non                               0000013A
 oui                               0000013C
-ret                               0000017D
+ret                               00000187
 rx_if                             00000012
 start                             00000139
 t1_it                             0000000E
-unit_pp                           00000188
-wait                              00000173
+unit_pp                           00000192
+wait                              0000017D
 
 Errors   :     0
 Warnings :    14 reported,     0 suppressed
-Messages :    14 reported,     0 suppressed
+Messages :    15 reported,     0 suppressed
 
 

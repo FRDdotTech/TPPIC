@@ -191,10 +191,14 @@ ACK_RX:
 	bcf	UART_RX_EN, 0
 	call	T_AUTO
 	call	T_PULL
+	call	T_REQ
 	return
+
 	
+
+
 T_AUTO:
-	movlw	d'48'
+	movlw	d'65'
 	subwf	UART_RX_TMP
 	btfss	STATUS, Z
 	return
@@ -204,13 +208,23 @@ T_AUTO:
 T_PULL:
 	movfw	UART_RX_BUF
 	movwf	UART_RX_TMP
-	movlw	d'49'
+	movlw	d'82'
 	subwf	UART_RX_TMP
 	btfss	STATUS, Z
 	return
 	BSF	UART_MODE, 0
 	BSF	UART_TX_EN, 0
 
+T_REQ:
+	btfss	UART_MODE,0
+	    return
+	movfw	UART_RX_BUF
+	movwf	UART_RX_TMP
+	movlw	d'100'
+	subwf	UART_RX_TMP
+	btfss	STATUS, Z
+	return
+	BSF	UART_TX_EN, 0
 UART_TX_IT:
 	BTFSS	UART_TX_EN, 0
 	return
