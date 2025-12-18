@@ -21,14 +21,26 @@ irq org	0x004
 	MOVFW   STATUS
 	MOVWF   ctx_status
 	; set uart_tx flag
-	btfss	PIR1, TMR1IF
-	BCF	UART_TX_EN, 0
-false	BSF	UART_TX_EN, 0
-	; restore context
+	btfsc	PIR1, TMR1IF
+	goto t1_it
+	btfsc	PIR1, RCIF
+	goto rx_if
+	goto leave
+	
+t1_it	
+	BSF	UART_TX_EN, 0
+	BCF	PIR1, TMR1IF
+	goto leave
+	
+rx_if	
+	BCF	PIR1, RCIF
+	goto leave
+	
+	
+leave	; restore context
 	MOVFW   ctx_status
 	MOVWF   STATUS
 	MOVFW   ctx_w
-	BCF	PIR1, TMR1IF
 	RETFIE
     
     

@@ -1,4 +1,4 @@
-MPASM 5.86                      ADC_UART.ASM   12-18-2025  8:46:14         PAGE  1
+MPASM 5.86                      ADC_UART.ASM   12-18-2025  10:34:55         PAGE  1
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -38,249 +38,261 @@ Warning[205]: Found directive in column 1. (include)
 0007   0803           00021         MOVFW   STATUS
 0008   00A1           00022         MOVWF   ctx_status
                       00023         ; set uart_tx flag
-0009   1C0C           00024         btfss   PIR1, TMR1IF
-000A   1078           00025         BCF     UART_TX_EN, 0
-000B   1478           00026 false   BSF     UART_TX_EN, 0
-                      00027         ; restore context
-000C   0821           00028         MOVFW   ctx_status
-000D   0083           00029         MOVWF   STATUS
-000E   0820           00030         MOVFW   ctx_w
-000F   100C           00031         BCF     PIR1, TMR1IF
-0010   0009           00032         RETFIE
-                      00033     
-                      00034     
-                      00035         org     0x100
-                      00036         
-0100                  00037 jump_start      
-Warning[207]: Found label after column 1. (BCD1)
-  00000071            00038         BCD1            equ 0x71
-Warning[207]: Found label after column 1. (BCD01)
-  00000072            00039         BCD01           equ 0x72
-Warning[207]: Found label after column 1. (BCD_TEMP)
-MPASM 5.86                      ADC_UART.ASM   12-18-2025  8:46:14         PAGE  2
+0009   180C           00024         btfsc   PIR1, TMR1IF
+000A   2???           00025         goto t1_it
+000B   1A8C           00026         btfsc   PIR1, RCIF
+000C   2???           00027         goto rx_if
+000D   2???           00028         goto leave
+                      00029         
+000E                  00030 t1_it   
+000E   1478           00031         BSF     UART_TX_EN, 0
+000F   100C           00032         BCF     PIR1, TMR1IF
+0010   2???           00033         goto leave
+                      00034         
+0011                  00035 rx_if   
+0011   128C           00036         BCF     PIR1, RCIF
+0012   2???           00037         goto leave
+                      00038         
+                      00039         
+0013                  00040 leave   ; restore context
+0013   0821           00041         MOVFW   ctx_status
+0014   0083           00042         MOVWF   STATUS
+MPASM 5.86                      ADC_UART.ASM   12-18-2025  10:34:55         PAGE  2
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-  00000074            00040         BCD_TEMP        equ 0x74
-                      00041         
-Warning[207]: Found label after column 1. (ADC_CON)
-  00000075            00042         ADC_CON         equ 0x75
-Warning[207]: Found label after column 1. (ADC_TEMP)
-  00000076            00043         ADC_TEMP        equ 0x76
-                      00044     
-Warning[207]: Found label after column 1. (UART_TX_EN)
-  00000078            00045         UART_TX_EN      equ 0x78
+0015   0820           00043         MOVFW   ctx_w
+0016   0009           00044         RETFIE
+                      00045     
                       00046     
+                      00047         org     0x100
+                      00048         
+0100                  00049 jump_start      
+Warning[207]: Found label after column 1. (BCD1)
+  00000071            00050         BCD1            equ 0x71
+Warning[207]: Found label after column 1. (BCD01)
+  00000072            00051         BCD01           equ 0x72
+Warning[207]: Found label after column 1. (BCD_TEMP)
+  00000074            00052         BCD_TEMP        equ 0x74
+                      00053         
+Warning[207]: Found label after column 1. (ADC_CON)
+  00000075            00054         ADC_CON         equ 0x75
+Warning[207]: Found label after column 1. (ADC_TEMP)
+  00000076            00055         ADC_TEMP        equ 0x76
+                      00056     
+Warning[207]: Found label after column 1. (UART_TX_EN)
+  00000078            00057         UART_TX_EN      equ 0x78
+                      00058     
 Warning[207]: Found label after column 1. (ctx_w)
-  00000020            00047         ctx_w           equ 0x20
+  00000020            00059         ctx_w           equ 0x20
 Warning[207]: Found label after column 1. (ctx_status)
-  00000021            00048         ctx_status      equ 0x21
-                      00049                 ; configuration du port B&D en sortie (8LED)
-                      00050 
-0100   1683 1303      00051         banksel TRISB           ; port B en sortie
+  00000021            00060         ctx_status      equ 0x21
+                      00061                 ; configuration du port B&D en sortie (8LED)
+                      00062 
+0100   1683 1303      00063         banksel TRISB           ; port B en sortie
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0102   0186           00052         clrf    TRISB           
-0103   1283 1303      00053         banksel PORTB           ;Clear PORTC
-0105   0186           00054         clrf    PORTB   
-                      00055         
-0106   1683 1303      00056         banksel TRISD           ; port B en sortie
+0102   0186           00064         clrf    TRISB           
+0103   1283 1303      00065         banksel PORTB           ;Clear PORTC
+0105   0186           00066         clrf    PORTB   
+                      00067         
+0106   1683 1303      00068         banksel TRISD           ; port B en sortie
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0108   0188           00057         clrf    TRISD           
-0109   1283 1303      00058         banksel PORTD           ;Clear PORTC
-010B   0188           00059         clrf    PORTD
-                      00060         
-                      00061         ; configuration de l'ADC
-                      00062         
-010C   1683 1303      00063         banksel ADCON1
-010E   300E           00064         movlw   B'00001110'     ;Left justify,1 analog channel
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-010F   009F           00065         movwf   ADCON1          ;VDD and VSS references
-                      00066 
-0110   1283 1303      00067         banksel ADCON0  
-0112   3041           00068         movlw   B'01000001'     ;Fosc/8, A/D enabled
-0113   009F           00069         movwf   ADCON0
-                      00070         
-                      00071         ; USART CONFIG
+0108   0188           00069         clrf    TRISD           
+0109   1283 1303      00070         banksel PORTD           ;Clear PORTC
+010B   0188           00071         clrf    PORTD
                       00072         
-                      00073         ;---CONFIGURE TXSTA
-                      00074         ;
-                      00075         ;7- CSRC        0
-                      00076         ;6- TX9         0
-                      00077         ;5- TXEN        1
-                      00078         ;4- SYNC        0
-                      00079         ;3- NOT USED    0
-                      00080         ;2- BRGH        1
-                      00081         ;1- TRMT        0
-                      00082         ;0- TX9D        0
-0114   1683 1303      00083         banksel TXSTA
-0116   3024           00084         MOVLW   B'00100100' 
-MPASM 5.86                      ADC_UART.ASM   12-18-2025  8:46:14         PAGE  3
+                      00073         ; configuration de l'ADC
+                      00074         
+010C   1683 1303      00075         banksel ADCON1
+010E   300E           00076         movlw   B'00001110'     ;Left justify,1 analog channel
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+010F   009F           00077         movwf   ADCON1          ;VDD and VSS references
+                      00078 
+0110   1283 1303      00079         banksel ADCON0  
+0112   3041           00080         movlw   B'01000001'     ;Fosc/8, A/D enabled
+0113   009F           00081         movwf   ADCON0
+                      00082         
+                      00083         ; USART CONFIG
+                      00084         
+MPASM 5.86                      ADC_UART.ASM   12-18-2025  10:34:55         PAGE  3
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
+                      00085         ;---CONFIGURE TXSTA
+                      00086         ;
+                      00087         ;7- CSRC        0
+                      00088         ;6- TX9         0
+                      00089         ;5- TXEN        1
+                      00090         ;4- SYNC        0
+                      00091         ;3- NOT USED    0
+                      00092         ;2- BRGH        1
+                      00093         ;1- TRMT        0
+                      00094         ;0- TX9D        0
+0114   1683 1303      00095         banksel TXSTA
+0116   3024           00096         MOVLW   B'00100100' 
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0117   0098           00085         MOVWF   TXSTA
-                      00086 
-                      00087         ;---CONFIGURE RCSTA
-                      00088         ;
-                      00089         ;7- SPEN        1
-                      00090         ;6- RX9         0
-                      00091         ;5- SREN        0
-                      00092         ;4- CREN        0
-                      00093         ;3- ADDEN       0
-                      00094         ;2- FERR        0
-                      00095         ;1- OERR        0
-                      00096         ;1- RX9D        0
-0118   1283 1303      00097         banksel RCSTA
-011A   3080           00098         MOVLW   B'10000000' ;ENABLE SERIAL PORT
-011B   0098           00099         MOVWF   RCSTA ;RECEIVE STATUS REG
-                      00100         
-                      00101         ;---CONFIGURE SPBRG FOR DESIRED BAUD RATE
-011C   1683 1303      00102         banksel SPBRG
-011E   3032           00103         MOVLW   D'50' ;WE WILL USE 9600bps 
+0117   0098           00097         MOVWF   TXSTA
+                      00098 
+                      00099         ;---CONFIGURE RCSTA
+                      00100         ;
+                      00101         ;7- SPEN        1
+                      00102         ;6- RX9         0
+                      00103         ;5- SREN        0
+                      00104         ;4- CREN        0
+                      00105         ;3- ADDEN       0
+                      00106         ;2- FERR        0
+                      00107         ;1- OERR        0
+                      00108         ;1- RX9D        0
+0118   1283 1303      00109         banksel RCSTA
+011A   3080           00110         MOVLW   B'10000000' ;ENABLE SERIAL PORT
+011B   0098           00111         MOVWF   RCSTA ;RECEIVE STATUS REG
+                      00112         
+                      00113         ;---CONFIGURE SPBRG FOR DESIRED BAUD RATE
+011C   1683 1303      00114         banksel SPBRG
+011E   3032           00115         MOVLW   D'50' ;WE WILL USE 9600bps 
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-011F   0099           00104         MOVWF   SPBRG ;BAUD AT 8MHZ
-                      00105         
-                      00106         ; TIMER1 SETUP
-0120   1283 1303      00107         banksel T1CON
-0122   303D           00108         MOVLW   B'00111101'
-0123   0090           00109         MOVWF   T1CON
-                      00110         
-                      00111         ;TIMER1 IT SETUP
-0124   1283 1303      00112         banksel INTCON
-0126   30C0           00113         MOVLW   B'11000000'
-0127   008B           00114         MOVWF   INTCON
-                      00115         
-0128   1683 1303      00116         banksel PIE1
-012A   3001           00117         MOVLW   B'00000001'
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-012B   008C           00118         MOVWF   PIE1
-                      00119         
-                      00120         
-                      00121         
-                      00122         ; ---main()
-012C   2???           00123 loop    call    ADC
-012D   2???           00124         call    BCD
-012E   2???           00125         call    UART_TX_IT
-012F   2???           00126         goto    loop
+011F   0099           00116         MOVWF   SPBRG ;BAUD AT 8MHZ
+                      00117         
+                      00118         ; TIMER1 SETUP
+0120   1283 1303      00119         banksel T1CON
+0122   303D           00120         MOVLW   B'00111101'
+0123   0090           00121         MOVWF   T1CON
+                      00122         
+                      00123         ;TIMER1 IT SETUP
+0124   1283 1303      00124         banksel INTCON
+0126   30C0           00125         MOVLW   B'11000000'
+0127   008B           00126         MOVWF   INTCON
                       00127         
-0130                  00128 ADC:        ; wait unitil ADC convertion is done 
-0130   01F2           00129         clrf    BCD01
-0131   01F1           00130         clrf    BCD1
-0132   01F4           00131         clrf    BCD_TEMP
-0133   01F6           00132         clrf    ADC_TEMP
-0134   1283 1303      00133         banksel ADCON0
-0136   151F           00134 start   bsf     ADCON0,GO       ; demarrage de la conversion
-MPASM 5.86                      ADC_UART.ASM   12-18-2025  8:46:14         PAGE  4
+0128   1683 1303      00128         banksel PIE1
+012A   3001           00129         MOVLW   B'00000001'
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+012B   008C           00130         MOVWF   PIE1
+                      00131         
+                      00132         
+                      00133         
+                      00134         ; ---main()
+MPASM 5.86                      ADC_UART.ASM   12-18-2025  10:34:55         PAGE  4
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-0137   191F           00135 non     BTFSC   ADCON0,GO       ; attendre la fin de conversion
-0138   2???           00136         goto    non
-0139   0E1E           00137 oui     swapf   ADRESH,W        ; quel est le role de cette instruction ???
-013A   0086           00138         movwf   PORTB           ; ecriture sur le port B (affichage sur les LEDs
-013B   0E06           00139         swapf   PORTB, W
-013C   0088           00140         movwf   PORTD
-013D   00F5           00141         movwf   ADC_CON
-013E   0008           00142         return                  ; boucler sur la procedure de lecture
-                      00143         
-                      00144     
-013F                  00145 DELAY:                  ;PAS Utilisé
-013F   30FF           00146         MOVLW   0xFF
-0140   008E           00147         MOVWF   TMR1
-                      00148         
-0141   300F           00149 D1      MOVLW   0x0F
-0142   0081           00150         MOVWF   TMR0
-                      00151         
-Message[305]: Using default destination of 1 (file).
-0143   0B81           00152 D0      DECFSZ  TMR0
-0144   2???           00153         goto    D0
-                      00154         
-Message[305]: Using default destination of 1 (file).
-0145   0B8E           00155         DECFSZ  TMR1
-0146   2???           00156         goto    D1      
-                      00157         
-0147   0008           00158         return
-                      00159         
+012C   2???           00135 loop    call    ADC
+012D   2???           00136         call    BCD
+012E   2???           00137         call    UART_TX_IT
+012F   2???           00138         goto    loop
+                      00139         
+0130                  00140 ADC:        ; wait unitil ADC convertion is done 
+0130   01F2           00141         clrf    BCD01
+0131   01F1           00142         clrf    BCD1
+0132   01F4           00143         clrf    BCD_TEMP
+0133   01F6           00144         clrf    ADC_TEMP
+0134   1283 1303      00145         banksel ADCON0
+0136   151F           00146 start   bsf     ADCON0,GO       ; demarrage de la conversion
+0137   191F           00147 non     BTFSC   ADCON0,GO       ; attendre la fin de conversion
+0138   2???           00148         goto    non
+0139   0E1E           00149 oui     swapf   ADRESH,W        ; quel est le role de cette instruction ???
+013A   0086           00150         movwf   PORTB           ; ecriture sur le port B (affichage sur les LEDs
+013B   0E06           00151         swapf   PORTB, W
+013C   0088           00152         movwf   PORTD
+013D   00F5           00153         movwf   ADC_CON
+013E   0008           00154         return                  ; boucler sur la procedure de lecture
+                      00155         
+                      00156     
+013F                  00157 DELAY:                  ;PAS Utilisé
+013F   30FF           00158         MOVLW   0xFF
+0140   008E           00159         MOVWF   TMR1
                       00160         
-0148                  00161 UART_TX_IT:
-0148   1C78           00162         BTFSS   UART_TX_EN, 0
-0149   0008           00163         return
-014A   1078           00164         BCF     UART_TX_EN, 0
-014B   1283 1303      00165         banksel TXREG
-014D   0871           00166         movfw   BCD1
-014E   2???           00167         call    UART_TX
-014F   302C           00168         movlw   d'44'
-0150   2???           00169         call    UART_TX
-0151   0872           00170         movfw   BCD01
-0152   2???           00171         call    UART_TX
-0153   3056           00172         movlw   d'86'
-0154   2???           00173         call    UART_TX
-0155   300A           00174         movlw   d'10'
-0156   2???           00175         call    UART_TX
-0157   0008           00176         return
-                      00177         
-0158                  00178 UART_TX:        ; wait for transmit standby
-0158   0000           00179 wait    nop
-0159   1283 1303      00180         banksel PIR1
-015B   1E0C           00181         BTFSS   PIR1, TXIF
-015C   2???           00182         goto wait
-015D   0099           00183         MOVWF   TXREG
-                      00184         ;call   DELAY
-015E   0008           00185         return
-MPASM 5.86                      ADC_UART.ASM   12-18-2025  8:46:14         PAGE  5
+0141   300F           00161 D1      MOVLW   0x0F
+0142   0081           00162         MOVWF   TMR0
+                      00163         
+Message[305]: Using default destination of 1 (file).
+0143   0B81           00164 D0      DECFSZ  TMR0
+0144   2???           00165         goto    D0
+                      00166         
+Message[305]: Using default destination of 1 (file).
+0145   0B8E           00167         DECFSZ  TMR1
+0146   2???           00168         goto    D1      
+                      00169         
+0147   0008           00170         return
+                      00171         
+                      00172         
+0148                  00173 UART_TX_IT:
+0148   1C78           00174         BTFSS   UART_TX_EN, 0
+0149   0008           00175         return
+014A   1078           00176         BCF     UART_TX_EN, 0
+014B   1283 1303      00177         banksel TXREG
+014D   0871           00178         movfw   BCD1
+014E   2???           00179         call    UART_TX
+014F   302C           00180         movlw   d'44'
+0150   2???           00181         call    UART_TX
+0151   0872           00182         movfw   BCD01
+0152   2???           00183         call    UART_TX
+0153   3056           00184         movlw   d'86'
+0154   2???           00185         call    UART_TX
+MPASM 5.86                      ADC_UART.ASM   12-18-2025  10:34:55         PAGE  5
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-                      00186         
-015F   0000           00187 BCD:nop ;unité BCD
-0160   0875           00188         MOVFW   ADC_CON
-0161   00F6           00189         MOVWF   ADC_TEMP
-0162                  00190 ret
-0162   3005           00191         movlw   d'5'
-Message[305]: Using default destination of 1 (file).
-0163   02F6           00192         subwf   ADC_TEMP
-0164   1803           00193         btfsc   STATUS, C
-0165   2???           00194         goto    dec_pp
-0166   0871           00195         movfw   BCD1
-0167   3E30           00196         addlw   d'48'
-0168   00F1           00197         movwf   BCD1
+0155   300A           00186         movlw   d'10'
+0156   2???           00187         call    UART_TX
+0157   0008           00188         return
+                      00189         
+0158                  00190 UART_TX:        ; wait for transmit standby
+0158   0000           00191 wait    nop
+0159   1283 1303      00192         banksel PIR1
+015B   1E0C           00193         BTFSS   PIR1, TXIF
+015C   2???           00194         goto wait
+015D   0099           00195         MOVWF   TXREG
+                      00196         ;call   DELAY
+015E   0008           00197         return
                       00198         
-0169   0872           00199         movfw   BCD01
-016A   3E30           00200         addlw   d'48'
-016B   00F2           00201         movwf   BCD01
-016C   0008           00202         return
-                      00203         
-                      00204 
+015F   0000           00199 BCD:nop ;unité BCD
+0160   0875           00200         MOVFW   ADC_CON
+0161   00F6           00201         MOVWF   ADC_TEMP
+0162                  00202 ret
+0162   3005           00203         movlw   d'5'
 Message[305]: Using default destination of 1 (file).
-016D   0AF1           00205 unit_pp incf    BCD1
-016E   01F2           00206         clrf    BCD01
-                      00207         
-                      00208     
-                      00209 
+0163   02F6           00204         subwf   ADC_TEMP
+0164   1803           00205         btfsc   STATUS, C
+0165   2???           00206         goto    dec_pp
+0166   0871           00207         movfw   BCD1
+0167   3E30           00208         addlw   d'48'
+0168   00F1           00209         movwf   BCD1
+                      00210         
+0169   0872           00211         movfw   BCD01
+016A   3E30           00212         addlw   d'48'
+016B   00F2           00213         movwf   BCD01
+016C   0008           00214         return
+                      00215         
+                      00216 
 Message[305]: Using default destination of 1 (file).
-016F   0AF2           00210 dec_pp  incf    BCD01
-0170   0872           00211         movfw   BCD01
-0171   00F4           00212         movwf   BCD_TEMP
-0172   300A           00213         movlw   D'10'
+016D   0AF1           00217 unit_pp incf    BCD1
+016E   01F2           00218         clrf    BCD01
+                      00219         
+                      00220     
+                      00221 
 Message[305]: Using default destination of 1 (file).
-0173   02F4           00214         subwf   BCD_TEMP
-0174   1903           00215         btfsc   STATUS, Z
-0175   2???           00216         goto    unit_pp
-0176   2???           00217         goto    ret
-                      00218         
-                      00219 
+016F   0AF2           00222 dec_pp  incf    BCD01
+0170   0872           00223         movfw   BCD01
+0171   00F4           00224         movwf   BCD_TEMP
+0172   300A           00225         movlw   D'10'
+Message[305]: Using default destination of 1 (file).
+0173   02F4           00226         subwf   BCD_TEMP
+0174   1903           00227         btfsc   STATUS, Z
+0175   2???           00228         goto    unit_pp
+0176   2???           00229         goto    ret
+                      00230         
+                      00231 
 Warning[205]: Found directive in column 1. (end)
-3F3A                  00220 end
-MPASM 5.86                      ADC_UART.ASM   12-18-2025  8:46:14         PAGE  6
+3F3A                  00232 end
+MPASM 5.86                      ADC_UART.ASM   12-18-2025  10:34:55         PAGE  6
 
 
 SYMBOL TABLE
@@ -339,7 +351,7 @@ CCPR2L                            0000001B
 CHS0                              00000003
 CHS1                              00000004
 CHS2                              00000005
-MPASM 5.86                      ADC_UART.ASM   12-18-2025  8:46:14         PAGE  7
+MPASM 5.86                      ADC_UART.ASM   12-18-2025  10:34:55         PAGE  7
 
 
 SYMBOL TABLE
@@ -398,7 +410,7 @@ NOT_RC8                           00000006
 NOT_T1SYNC                        00000002
 NOT_TO                            00000004
 NOT_TX8                           00000006
-MPASM 5.86                      ADC_UART.ASM   12-18-2025  8:46:14         PAGE  8
+MPASM 5.86                      ADC_UART.ASM   12-18-2025  10:34:55         PAGE  8
 
 
 SYMBOL TABLE
@@ -457,7 +469,7 @@ RC0                               00000000
 RC1                               00000001
 RC2                               00000002
 RC3                               00000003
-MPASM 5.86                      ADC_UART.ASM   12-18-2025  8:46:14         PAGE  9
+MPASM 5.86                      ADC_UART.ASM   12-18-2025  10:34:55         PAGE  9
 
 
 SYMBOL TABLE
@@ -516,7 +528,7 @@ SSPOV                             00000006
 SSPSTAT                           00000094
 STATUS                            00000003
 SYNC                              00000004
-MPASM 5.86                      ADC_UART.ASM   12-18-2025  8:46:14         PAGE 10
+MPASM 5.86                      ADC_UART.ASM   12-18-2025  10:34:55         PAGE 10
 
 
 SYMBOL TABLE
@@ -575,7 +587,7 @@ TRISC1                            00000001
 TRISC2                            00000002
 TRISC3                            00000003
 TRISC4                            00000004
-MPASM 5.86                      ADC_UART.ASM   12-18-2025  8:46:14         PAGE 11
+MPASM 5.86                      ADC_UART.ASM   12-18-2025  10:34:55         PAGE 11
 
 
 SYMBOL TABLE
@@ -634,7 +646,7 @@ _DEVID1                           00002006
 _FOSC_EXTRC                       00003FFF
 _FOSC_HS                          00003FFE
 _FOSC_LP                          00003FFC
-MPASM 5.86                      ADC_UART.ASM   12-18-2025  8:46:14         PAGE 12
+MPASM 5.86                      ADC_UART.ASM   12-18-2025  10:34:55         PAGE 12
 
 
 SYMBOL TABLE
@@ -665,14 +677,16 @@ __16F877                          00000001
 ctx_status                        00000021
 ctx_w                             00000020
 dec_pp                            0000016F
-false                             0000000B
 irq                               00000004
 jump_start                        00000100
+leave                             00000013
 loop                              0000012C
 non                               00000137
 oui                               00000139
 ret                               00000162
+rx_if                             00000011
 start                             00000136
+t1_it                             0000000E
 unit_pp                           0000016D
 wait                              00000158
 
