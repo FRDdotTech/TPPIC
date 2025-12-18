@@ -21,9 +21,9 @@ irq org	0x004
 	MOVFW   STATUS
 	MOVWF   ctx_status
 	; set uart_tx flag
-	btfsc	PIR1, TMR1IF
+	btfsc	PIR1, TMR1IF	;test TIMER1 interrupt
 	goto t1_it
-	btfsc	PIR1, RCIF
+	btfsc	PIR1, RCIF	; test UART_RX Interrupt
 	goto rx_if
 	goto leave
 	
@@ -58,7 +58,7 @@ jump_start
     
 	UART_TX_EN	equ 0x78
 	UART_RX_EN	equ 0x79
-	UART_RX_BUF	equ 0x80
+	UART_RX_BUF	equ 0x73
     
 	ctx_w		equ 0x20
 	ctx_status	equ 0x21
