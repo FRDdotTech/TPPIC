@@ -28,6 +28,7 @@ irq org	0x004
 	goto leave
 	
 t1_it	
+	btfss	UART_MODE, 0	; if mode if pulling don't set tx_enable
 	BSF	UART_TX_EN, 0
 	BCF	PIR1, TMR1IF
 	goto leave
@@ -58,7 +59,9 @@ jump_start
     
 	UART_TX_EN	equ 0x78
 	UART_RX_EN	equ 0x79
+	UART_MODE	equ 0x7A    ; 0 -> interupt; 1 -> pulling
 	UART_RX_BUF	equ 0x73
+	UART_RX_TMP	equ 0x7B
     
 	ctx_w		equ 0x20
 	ctx_status	equ 0x21
@@ -133,6 +136,9 @@ jump_start
 	MOVLW	B'00100001'
 	MOVWF	PIE1
 	
+	movlw	d'0'
+	movwf	UART_RX_TMP
+	
 	
 	
 	; ---main()
@@ -178,12 +184,33 @@ ACK_RX:
 	btfss	UART_RX_EN, 0
 	return
 	movfw	UART_RX_BUF
+	movwf	UART_RX_TMP
 	call	UART_TX
 	movlw	d'10'
 	call	UART_TX
 	bcf	UART_RX_EN, 0
+	call	T_AUTO
+	call	T_PULL
 	return
 	
+T_AUTO:
+	movlw	d'48'
+	subwf	UART_RX_TMP
+	btfss	STATUS, Z
+	return
+	BCF	UART_MODE, 0
+
+	
+T_PULL:
+	movfw	UART_RX_BUF
+	movwf	UART_RX_TMP
+	movlw	d'49'
+	subwf	UART_RX_TMP
+	btfss	STATUS, Z
+	return
+	BSF	UART_MODE, 0
+	BSF	UART_TX_EN, 0
+
 UART_TX_IT:
 	BTFSS	UART_TX_EN, 0
 	return

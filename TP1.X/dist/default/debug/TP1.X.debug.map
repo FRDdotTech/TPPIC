@@ -1,13 +1,13 @@
 MPLINK 5.09, LINKER
-Linker Map File - Created Thu Dec 18 11:05:24 2025
+Linker Map File - Created Thu Dec 18 11:28:13 2025
 
                                  Section Info
                   Section       Type    Address   Location Size(Bytes)
                 ---------  ---------  ---------  ---------  ---------
                    .org_0       code   0x000000    program   0x000002
                    .cinit    romdata   0x000001    program   0x000004
-                   .org_1       code   0x000004    program   0x00002a
-                   .org_2       code   0x000100    program   0x000100
+                   .org_1       code   0x000004    program   0x00002c
+                   .org_2       code   0x000100    program   0x00011c
                     dbgP0       code   0x001f00    program   0x000200
 .config_2007_BUILD/DEFAULT/DEBUG/ADC_UART.O       code   0x002007    program   0x000002
                     dbgD0      udata   0x000070       data   0x000001
@@ -22,11 +22,11 @@ Linker Map File - Created Thu Dec 18 11:05:24 2025
                                Start         End      
                            ---------   ---------      
                             0x000000    0x000002      
-                            0x000004    0x000018      
-                            0x000100    0x00017f      
+                            0x000004    0x000019      
+                            0x000100    0x00018d      
                             0x001f00    0x001fff      
                             0x002007    0x002007      
-            409 out of 8454 program addresses used, program memory utilization is 4%
+            424 out of 8454 program addresses used, program memory utilization is 5%
 
 
 
@@ -35,25 +35,27 @@ Linker Map File - Created Thu Dec 18 11:05:24 2025
                 ---------  ---------  ---------  --------- ---------                
                    ACK_RX   0x000149    program     static U:\TPPIC\TP1.X\ADC_UART.asm
                       ADC   0x000131    program     static U:\TPPIC\TP1.X\ADC_UART.asm
-                      BCD   0x000168    program     static U:\TPPIC\TP1.X\ADC_UART.asm
+                      BCD   0x000176    program     static U:\TPPIC\TP1.X\ADC_UART.asm
                        D0   0x000144    program     static U:\TPPIC\TP1.X\ADC_UART.asm
                        D1   0x000142    program     static U:\TPPIC\TP1.X\ADC_UART.asm
                     DELAY   0x000140    program     static U:\TPPIC\TP1.X\ADC_UART.asm
-                  UART_TX   0x000161    program     static U:\TPPIC\TP1.X\ADC_UART.asm
-               UART_TX_IT   0x000151    program     static U:\TPPIC\TP1.X\ADC_UART.asm
-                   dec_pp   0x000178    program     static U:\TPPIC\TP1.X\ADC_UART.asm
+                   T_AUTO   0x000154    program     static U:\TPPIC\TP1.X\ADC_UART.asm
+                   T_PULL   0x000159    program     static U:\TPPIC\TP1.X\ADC_UART.asm
+                  UART_TX   0x00016f    program     static U:\TPPIC\TP1.X\ADC_UART.asm
+               UART_TX_IT   0x00015f    program     static U:\TPPIC\TP1.X\ADC_UART.asm
+                   dec_pp   0x000186    program     static U:\TPPIC\TP1.X\ADC_UART.asm
                       irq   0x000004    program     static U:\TPPIC\TP1.X\ADC_UART.asm
                jump_start   0x000100    program     static U:\TPPIC\TP1.X\ADC_UART.asm
-                    leave   0x000015    program     static U:\TPPIC\TP1.X\ADC_UART.asm
+                    leave   0x000016    program     static U:\TPPIC\TP1.X\ADC_UART.asm
                      loop   0x00012c    program     static U:\TPPIC\TP1.X\ADC_UART.asm
                       non   0x000138    program     static U:\TPPIC\TP1.X\ADC_UART.asm
                       oui   0x00013a    program     static U:\TPPIC\TP1.X\ADC_UART.asm
-                      ret   0x00016b    program     static U:\TPPIC\TP1.X\ADC_UART.asm
-                    rx_if   0x000011    program     static U:\TPPIC\TP1.X\ADC_UART.asm
+                      ret   0x000179    program     static U:\TPPIC\TP1.X\ADC_UART.asm
+                    rx_if   0x000012    program     static U:\TPPIC\TP1.X\ADC_UART.asm
                     start   0x000137    program     static U:\TPPIC\TP1.X\ADC_UART.asm
                     t1_it   0x00000e    program     static U:\TPPIC\TP1.X\ADC_UART.asm
-                  unit_pp   0x000176    program     static U:\TPPIC\TP1.X\ADC_UART.asm
-                     wait   0x000161    program     static U:\TPPIC\TP1.X\ADC_UART.asm
+                  unit_pp   0x000184    program     static U:\TPPIC\TP1.X\ADC_UART.asm
+                     wait   0x00016f    program     static U:\TPPIC\TP1.X\ADC_UART.asm
 
 
 
@@ -62,8 +64,8 @@ Linker Map File - Created Thu Dec 18 11:05:24 2025
                 ---------  ---------  ---------  --------- ---------                
                       irq   0x000004    program     static U:\TPPIC\TP1.X\ADC_UART.asm
                     t1_it   0x00000e    program     static U:\TPPIC\TP1.X\ADC_UART.asm
-                    rx_if   0x000011    program     static U:\TPPIC\TP1.X\ADC_UART.asm
-                    leave   0x000015    program     static U:\TPPIC\TP1.X\ADC_UART.asm
+                    rx_if   0x000012    program     static U:\TPPIC\TP1.X\ADC_UART.asm
+                    leave   0x000016    program     static U:\TPPIC\TP1.X\ADC_UART.asm
                jump_start   0x000100    program     static U:\TPPIC\TP1.X\ADC_UART.asm
                      loop   0x00012c    program     static U:\TPPIC\TP1.X\ADC_UART.asm
                       ADC   0x000131    program     static U:\TPPIC\TP1.X\ADC_UART.asm
@@ -74,12 +76,14 @@ Linker Map File - Created Thu Dec 18 11:05:24 2025
                        D1   0x000142    program     static U:\TPPIC\TP1.X\ADC_UART.asm
                        D0   0x000144    program     static U:\TPPIC\TP1.X\ADC_UART.asm
                    ACK_RX   0x000149    program     static U:\TPPIC\TP1.X\ADC_UART.asm
-               UART_TX_IT   0x000151    program     static U:\TPPIC\TP1.X\ADC_UART.asm
-                  UART_TX   0x000161    program     static U:\TPPIC\TP1.X\ADC_UART.asm
-                     wait   0x000161    program     static U:\TPPIC\TP1.X\ADC_UART.asm
-                      BCD   0x000168    program     static U:\TPPIC\TP1.X\ADC_UART.asm
-                      ret   0x00016b    program     static U:\TPPIC\TP1.X\ADC_UART.asm
-                  unit_pp   0x000176    program     static U:\TPPIC\TP1.X\ADC_UART.asm
-                   dec_pp   0x000178    program     static U:\TPPIC\TP1.X\ADC_UART.asm
+                   T_AUTO   0x000154    program     static U:\TPPIC\TP1.X\ADC_UART.asm
+                   T_PULL   0x000159    program     static U:\TPPIC\TP1.X\ADC_UART.asm
+               UART_TX_IT   0x00015f    program     static U:\TPPIC\TP1.X\ADC_UART.asm
+                  UART_TX   0x00016f    program     static U:\TPPIC\TP1.X\ADC_UART.asm
+                     wait   0x00016f    program     static U:\TPPIC\TP1.X\ADC_UART.asm
+                      BCD   0x000176    program     static U:\TPPIC\TP1.X\ADC_UART.asm
+                      ret   0x000179    program     static U:\TPPIC\TP1.X\ADC_UART.asm
+                  unit_pp   0x000184    program     static U:\TPPIC\TP1.X\ADC_UART.asm
+                   dec_pp   0x000186    program     static U:\TPPIC\TP1.X\ADC_UART.asm
 
 
