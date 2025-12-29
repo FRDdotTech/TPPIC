@@ -12,7 +12,7 @@ include "p16f877.inc"
  
  
     org 0x0 ; reset addr
-	goto jump_start
+	GOTO jump_start
 	
 irq org	0x004
     ; context save
@@ -71,24 +71,24 @@ jump_start
 		; configuration du port B&D en sortie (8LED)
 
 	banksel TRISB		; port B en sortie
-	clrf	TRISB		
+	CLRF	TRISB		
 	banksel PORTB		;Clear PORTC
-	clrf	PORTB	
+	CLRF	PORTB	
 	
 	banksel TRISD		; port B en sortie
-	clrf	TRISD		
+	CLRF	TRISD		
 	banksel PORTD		;Clear PORTC
-	clrf	PORTD
+	CLRF	PORTD
 	
 	; configuration de l'ADC
 	
 	banksel ADCON1
-	movlw	B'00001110'	;Left justify,1 analog channel
-	movwf	ADCON1		;VDD and VSS references
+	MOVLW	B'00001110'	;Left justify,1 analog channel
+	MOVWF	ADCON1		;VDD and VSS references
 
 	banksel ADCON0	
-	movlw	B'01000001'	;Fosc/8, A/D enabled
-	movwf	ADCON0
+	MOVLW	B'01000001'	;Fosc/8, A/D enabled
+	MOVWF	ADCON0
 	
 	; USART CONFIG
 	
@@ -152,47 +152,49 @@ jump_start
 	
 	
 	; ---main()
-loop	call	ADC
-	call	BCD
-	call	ACK_RX
-	call	UART_TX_IT
-	goto	loop
+loop	
+		CALL	ADC
+		CALL	BCD
+		CALL	ACK_RX
+		CALL	UART_TX_IT
+		GOTO	loop
 	
 ADC:	    ; wait unitil ADC convertion is done 
-		clrf    BCD01
-		clrf    BCD1
-		clrf	BCD_TEMP
-		clrf	ADC_TEMP
+		CLRF    BCD01
+		CLRF    BCD1
+		CLRF	BCD_TEMP
+		CLRF	ADC_TEMP
 		banksel ADCON0
-start   
-        BSF     ADCON0,GO   ; start ADC conv
-non     
-        BTFSC   ADCON0,GO   ; while CONV NOK
-        GOTO    non
-oui     
-        MOVFW   ADRESH
-        MOVWF   ADC_CON
-        MOVWF   PORTD   
-        SWAPF   ADRESH,W
-        MOVWF   PORTB       ; MSB on PORTB LSB
-        RETURN
-
+start	
+		BSF 	ADCON0,GO	; start ADC conv
+non		
+		BTFSC	ADCON0,GO	; while CONV NOK
+		GOTO	non
+oui		
+		MOVFW 	ADRESH
+		MOVWF	ADC_CON
+		MOVWF	PORTD   
+		SWAPF	ADRESH,W
+		MOVWF	PORTB		; MSB on PORTB LSB
+		RETURN
 	
     
 DELAY:			;PAS Utilis�
 	MOVLW	0xFF
 	MOVWF	TMR1
 	
-D1	MOVLW	0x0F
+D1	
+	MOVLW	0x0F
 	MOVWF	TMR0
 	
-D0	DECFSZ	TMR0
-	goto	D0
+D0	
+	DECFSZ	TMR0
+	GOTO	D0
 	
 	DECFSZ	TMR1
-	goto	D1	
+	GOTO	D1	
 	
-	return
+	RETURN
 
 ACK_RX:
 	btfss	UART_RX_EN, 0
@@ -250,59 +252,62 @@ UART_TX_IT:
 	BCF	UART_TX_EN, 0
 	
 	banksel TXREG
-	movfw	BCD1
-	call	UART_TX
-	movlw	d'44'
-	call	UART_TX
-	movfw	BCD01
-	call	UART_TX
-	movlw	d'86'
-	call	UART_TX
-	movlw	d'10'
-	call	UART_TX
-	return
+	MOVFW	BCD1
+	CALL	UART_TX
+	MOVLW	d'44'
+	CALL	UART_TX
+	MOVFW	BCD01
+	CALL	UART_TX
+	MOVLW	d'86'
+	CALL	UART_TX
+	MOVLW	d'10'
+	CALL	UART_TX
+	RETURN
 	
 UART_TX:	; wait for transmit standby
-wait	nop
+wait	
+	nop
 	banksel PIR1
 	BTFSS	PIR1, TXIF
-	goto wait
+	GOTO 	wait
 	MOVWF	TXREG
-	;call	DELAY
-	return
+	;CALL	DELAY
+	RETURN
 	
 BCD:
 	nop
 	MOVFW	ADC_CON
 	MOVWF	ADC_TEMP
 ret
-	movlw	d'5'
-	subwf	ADC_TEMP
-	btfsc	STATUS, C
-	goto	dec_pp
-	movfw	BCD1
-	addlw	d'48'
-	movwf	BCD1
+	MOVLW	d'5'
+	SUBWF	ADC_TEMP
+	BTFSC	STATUS, C
+	GOTO	dec_pp
+	MOVFW	BCD1
+	ADDLW	d'48'
+	MOVWF	BCD1
 	
-	movfw	BCD01
-	addlw	d'48'
-	movwf	BCD01
-	return
+	MOVFW	BCD01
+	ADDLW	d'48'
+	MOVWF	BCD01
+	RETURN
 	
 
-unit_pp	incf    BCD1
-	clrf    BCD01
+unit_pp	
+	INCF    BCD1
+	CLRF    BCD01
 	
     
 
-dec_pp	incf    BCD01
-	movfw	BCD01
-	movwf	BCD_TEMP
-	movlw	D'10'
-	subwf	BCD_TEMP
-	btfsc	STATUS, Z
-	goto	unit_pp
-	goto	ret
+dec_pp	
+	INCF    BCD01
+	MOVFW	BCD01
+	MOVWF	BCD_TEMP
+	MOVLW	D'10'
+	SUBWF	BCD_TEMP
+	BTFSC	STATUS, Z
+	GOTO	unit_pp
+	GOTO	ret
 	
 
 end
