@@ -24,7 +24,7 @@ irq org	0x004
 	btfsc	PIR1, TMR1IF	;test TIMER1 interrupt
 	goto t1_it
 	btfsc	PIR1, RCIF	; test UART_RX Interrupt
-	goto rx_if
+	goto rx_it
 	goto leave
 	
 t1_it	
@@ -35,7 +35,7 @@ t1_it
 	BCF	PIR1, TMR1IF
 	goto leave
 	
-rx_if	
+rx_it	
 	movfw	RCREG
 	movwf	UART_RX_BUF
 	BSF	UART_RX_EN, 0
@@ -159,23 +159,27 @@ loop	call	ADC
 	goto	loop
 	
 ADC:	    ; wait unitil ADC convertion is done 
-	clrf    BCD01
-	clrf    BCD1
-	clrf	BCD_TEMP
-	clrf	ADC_TEMP
-	banksel ADCON0
-start	bsf 	ADCON0,GO	; demarrage de la conversion
-non	BTFSC	ADCON0,GO	; attendre la fin de conversion
-	goto	non
-oui	swapf	ADRESH,W	; quel est le role de cette instruction ???
-	movwf	PORTB		; ecriture sur le port B (affichage sur les LEDs
-	swapf	PORTB, W
-	movwf	PORTD
-	movwf	ADC_CON
-	return			; boucler sur la procedure de lecture
+		clrf    BCD01
+		clrf    BCD1
+		clrf	BCD_TEMP
+		clrf	ADC_TEMP
+		banksel ADCON0
+start   
+        BSF     ADCON0,GO   ; start ADC conv
+non     
+        BTFSC   ADCON0,GO   ; while CONV NOK
+        GOTO    non
+oui     
+        MOVFW   ADRESH
+        MOVWF   ADC_CON
+        MOVWF   PORTD   
+        SWAPF   ADRESH,W
+        MOVWF   PORTB       ; MSB on PORTB LSB
+        RETURN
+
 	
     
-DELAY:			;PAS Utilisé
+DELAY:			;PAS Utilisï¿½
 	MOVLW	0xFF
 	MOVWF	TMR1
 	
@@ -235,6 +239,7 @@ T_REQ:
 	btfss	STATUS, Z
 	return
 	BSF	UART_TX_EN, 0
+
 UART_TX_IT:
 	movfw	UART_TX_EN
 	movwf	UART_TX_EN_TMP
@@ -266,7 +271,8 @@ wait	nop
 	;call	DELAY
 	return
 	
-BCD:nop	;unité BCD
+BCD:
+	nop
 	MOVFW	ADC_CON
 	MOVWF	ADC_TEMP
 ret
