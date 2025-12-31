@@ -41,7 +41,6 @@ rx_it
 	BSF	UART_RX_EN, 0
 	goto leave
 	
-	
 leave	; restore context
 	MOVFW   ctx_status
 	MOVWF   STATUS
@@ -94,14 +93,14 @@ jump_start
 	
 	;---CONFIGURE TXSTA
 	;
-	;7- CSRC	0
-	;6- TX9		0
-	;5- TXEN	1
-	;4- SYNC	0
+	;7- CSRC		0
+	;6- TX9			0
+	;5- TXEN		1
+	;4- SYNC		0
 	;3- NOT USED	0
-	;2- BRGH	1
-	;1- TRMT	0
-	;0- TX9D	0
+	;2- BRGH		1
+	;1- TRMT		0
+	;0- TX9D		0
 	banksel TXSTA
 	MOVLW	B'00100100' 
 	MOVWF	TXSTA
@@ -115,7 +114,7 @@ jump_start
 	;3- ADDEN	0
 	;2- FERR	0
 	;1- OERR	0
-	;1- RX9D	0
+	;0- RX9D	0
 	banksel RCSTA
 	MOVLW	B'10010000' ;ENABLE SERIAL PORT
 	MOVWF	RCSTA ;RECEIVE STATUS REG
@@ -124,17 +123,46 @@ jump_start
 	banksel SPBRG
 	MOVLW	D'50' ;WE WILL USE 9600bps 
 	MOVWF	SPBRG ;BAUD AT 8MHZ
-	
+
+
 	; TIMER1 SETUP
+	;
+	;7- NOT USED	0
+	;6- NOT USED	0
+	;5- T1CKPS1		1
+	;4- T1CKPS1		1
+	;3- T1OSCEN		1
+	;2- T1SYNC		1
+	;1- TMR1CS		0
+	;0- TMR1ON		1
 	banksel T1CON
 	MOVLW	B'00111101'
 	MOVWF	T1CON
 	
-	;TIMER1 IT SETUP
+	; ITERRUPT SETUP
+	;
+	;7- GIE			1
+	;6- PIE			1
+	;5- T0IE		0
+	;4- INTE		0
+	;3- RBIE		0
+	;2- T0IF		0
+	;1- INTF		0
+	;0- RBIF		0
 	banksel INTCON
 	MOVLW	B'11000000'
 	MOVWF	INTCON
 	
+	; PERIPHERAL ITERRUPT SETUP
+	;
+	;7- PSPIE		0
+	;6- ADIE		0
+	;5- RCIE		1
+	;4- TXIE		0
+	;3- SSPIE		0
+	;2- CCP1IE		0
+	;1- TMR2IE		0
+	;0- TMR1IE		1
 	banksel PIE1
 	MOVLW	B'00100001'
 	MOVWF	PIE1
@@ -179,22 +207,21 @@ oui
 		RETURN
 	
     
-DELAY:			;PAS Utilis�
+DELAY:			;not used
 	MOVLW	0xFF
 	MOVWF	TMR1
-	
 D1	
 	MOVLW	0x0F
 	MOVWF	TMR0
-	
 D0	
 	DECFSZ	TMR0
 	GOTO	D0
-	
 	DECFSZ	TMR1
 	GOTO	D1	
-	
 	RETURN
+
+
+
 
 ACK_RX:
 	btfss	UART_RX_EN, 0
@@ -218,7 +245,7 @@ T_AUTO:
 	subwf	UART_RX_TMP
 	btfss	STATUS, Z
 	return
-	BCF	UART_MODE, 0
+	BCF		UART_MODE, 0
 
 	
 T_PULL:
@@ -228,8 +255,8 @@ T_PULL:
 	subwf	UART_RX_TMP
 	btfss	STATUS, Z
 	return
-	BSF	UART_MODE, 0
-	BSF	UART_TX_EN, 0
+	BSF		UART_MODE, 0
+	BSF		UART_TX_EN, 0
 
 T_REQ:
 	btfss	UART_MODE,0
@@ -264,11 +291,11 @@ UART_TX_IT:
 	CALL	UART_TX
 	RETURN
 	
-UART_TX:	; wait for transmit standby
+UART_TX:	
 wait	
 	nop
 	banksel PIR1
-	BTFSS	PIR1, TXIF
+	BTFSS	PIR1, TXIF	; while transmit busy
 	GOTO 	wait
 	MOVWF	TXREG
 	;CALL	DELAY
@@ -296,6 +323,7 @@ ret
 unit_pp	
 	INCF    BCD1
 	CLRF    BCD01
+	DECF    BCD01
 	
     
 
