@@ -1,7 +1,3 @@
-;	Programme du tutorial TP FIP2
-;	
-
-
 	list p=16f877
 include "p16f877.inc"
 	
