@@ -1,6 +1,9 @@
-        LIST    P=16F877
-        #include <p16f877.inc>
-        RADIX   DEC
+	list p=16f877
+include "p16f877.inc"
+	
+; CONFIG
+; __config 0xFF39
+ __CONFIG _FOSC_HS & _WDTE_OFF & _PWRTE_OFF & _CP_OFF & _BOREN_OFF & _LVP_OFF & _CPD_OFF & _WRT_ON
 
 ; ---------------- RAM ----------------
 ; registers 
@@ -20,8 +23,8 @@
 
     PATTERN_REG equ     0x71 ; current one-hot output pattern (to prevent using the PORT dirreclty)         
 
-
-    DELAY_L equ     0x7E
+    DELAY_L equ	    0x7D
+    DELAY_M equ     0x7E
     DELAY_H equ     0x7F
 
 
@@ -33,10 +36,14 @@
 
 ; ---------------- Init ----------------
 init:
-        BANKSEL TRISC
-        CLRF    TRISC           ; PORTC all outputs
-        BANKSEL PORTC
-        CLRF    PORTC
+        BANKSEL TRISB
+        MOVLW	B'11110000'	
+	MOVWF	TRISB
+	MOVWF	TRISD
+	
+        BANKSEL PORTB
+        CLRF    PORTB
+	CLRF    PORTD
 
         ; start with RC0 high (0000 0001)
         MOVLW   b'00000001'
@@ -48,10 +55,13 @@ init:
 ; ---------------- Main loop ----------------
 running_ligh:
         ; output the pattern
-        MOVF    PATTERN_REG, W
-        MOVWF   PORTC
+        MOVFW   PATTERN_REG
+	MOVWF	PORTD   
+	SWAPF	PATTERN_REG,W
+	MOVWF	PORTB		; MSB on PORTB LSB
 
         CALL    delay
+	CALL	delay
 
         ; decide direction based on flag bit
         BTFSC   FLAG_REG, DIR_FLAG ; skip next if bit = 0
@@ -85,9 +95,9 @@ rot_left:
 
 ; ---------------- Simple delay ----------------
 delay:
-        MOVLW   250
+        MOVLW   256
         MOVWF   DELAY_H
-dly1:   MOVLW   250
+dly1:   MOVLW   256
         MOVWF   DELAY_L
 dly2:   DECFSZ  DELAY_L, F
         GOTO    dly2
@@ -95,4 +105,7 @@ dly2:   DECFSZ  DELAY_L, F
         GOTO    dly1
         RETURN
 
-        END
+
+	
+	
+end
