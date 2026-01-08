@@ -24,11 +24,16 @@ irq org	0x004
 	goto leave
 	
 t1_it	
-	movfw	UART_TX_EN
-	addlw	d'1'
 	btfss	UART_MODE, 0	; if mode if pulling don't set tx_enable
-	movwf	UART_TX_EN
-	BCF	PIR1, TMR1IF
+	goto	en_tmr
+	decf	TMR_CNT,
+	btfss	STATUS, Z
+	goto	en_tmr
+	bsf	UART_TX_EN, 0
+	movlw	d'30'
+	movwf	TMR_CNT
+	
+en_tmr	BCF	PIR1, TMR1IF
 	goto leave
 	
 rx_it	
@@ -60,6 +65,8 @@ jump_start
 	UART_RX_BUF	equ 0x73
 	UART_RX_TMP	equ 0x7B
 	UART_TX_EN_TMP	equ 0x7C
+	
+	TMR_CNT		equ 0x7D
     
 	ctx_w		equ 0x20
 	ctx_status	equ 0x21
@@ -163,14 +170,15 @@ jump_start
 	MOVLW	B'00100001'
 	MOVWF	PIE1
 	
-	movlw	d'0'
-	movwf	UART_RX_TMP
 	
-	movlw	d'0'
-	movwf	UART_TX_EN_TMP
+	clrf	UART_RX_TMP
 	
-	movlw	d'0'
-	movwf	UART_TX_EN
+	clrf	UART_TX_EN_TMP
+	
+	clrf	UART_TX_EN
+	
+	movlw	d'3'
+	movwf	TMR_CNT
 	
 	
 	
@@ -266,11 +274,8 @@ T_REQ:
 	BSF	UART_TX_EN, 0
 
 UART_TX_IT:
-	movfw	UART_TX_EN
-	movwf	UART_TX_EN_TMP
-	movlw	'3'
-	subwf	UART_TX_EN_TMP
-	BTFSS	STATUS, Z
+    
+	BTFSC	UART_TX_EN, 0
 	return
 	BCF	UART_TX_EN, 0
 	
