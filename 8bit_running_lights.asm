@@ -95,9 +95,9 @@ rot_left:
 
 ; ---------------- Simple delay ----------------
 delay:
-        MOVLW   256
+        MOVLW   0xFF
         MOVWF   DELAY_H
-dly1:   MOVLW   256
+dly1:   MOVLW   0xFF
         MOVWF   DELAY_L
 dly2:   DECFSZ  DELAY_L, F
         GOTO    dly2
